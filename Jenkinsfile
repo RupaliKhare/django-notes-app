@@ -5,7 +5,7 @@ pipeline {
         stage("Cloning Code"){
             steps {
                 echo "Cloning the code"
-                git url:"https://github.com/qasimnauman/django-notes-app.git", branch: "main"
+                git url:"https://github.com/RupaliKhare/django-notes-app.git", branch: "main"
             }
         }
         
@@ -30,10 +30,12 @@ pipeline {
             }
         }
         
-        stage("deploy"){
+        stage('Install Docker Compose and Deploy') {
             steps {
-                echo "deploying the container"
-                sh "docker-compose down && docker-compose up -d"
+                sh 'curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o $HOME/docker-compose'
+                sh 'chmod +x $HOME/docker-compose'
+                sh '$HOME/docker-compose --version'
+                sh 'export PATH=$PATH:$HOME && $HOME/docker-compose down && $HOME/docker-compose up -d'
             }
         }
     }
